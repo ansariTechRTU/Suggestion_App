@@ -59,8 +59,14 @@ if (!parsed.success) {
  * On Render there is one service and one URL, so the web origin and the API's
  * public URL are the same thing. Deriving them from RENDER_EXTERNAL_URL means the
  * blueprint does not have to hardcode a hostname it cannot know in advance.
+ *
+ * Trailing slash stripped defensively: routes/google.ts builds the OAuth
+ * redirect URI via plain string concatenation (`${API_PUBLIC_URL}/api/auth/...`),
+ * so a trailing slash here would silently produce a double slash there — a
+ * redirect_uri that looks right at a glance but never matches what's
+ * registered in Google Cloud Console.
  */
-const external = parsed.data.RENDER_EXTERNAL_URL;
+const external = parsed.data.RENDER_EXTERNAL_URL?.replace(/\/+$/, '');
 
 export const env = {
   ...parsed.data,
