@@ -16,7 +16,10 @@ services:
     branch: main
     healthCheckPath: /api/health
 
-    buildCommand: corepack enable && pnpm install --no-frozen-lockfile && pnpm --filter web build
+    # NODE_ENV=production (set below, for the running app) makes pnpm skip
+    # devDependencies during install — which breaks the build, since `vite`
+    # (web) and other build-only tools live there. Override it for install only.
+    buildCommand: corepack enable && NODE_ENV=development pnpm install --no-frozen-lockfile && pnpm --filter web build
     # release: prisma generate → db push → raw.sql → seed. All idempotent,
     # so a restart or redeploy is safe and will not duplicate data.
     startCommand: pnpm --filter api release && pnpm --filter api start

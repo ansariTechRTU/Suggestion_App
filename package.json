@@ -20,7 +20,7 @@
     "db:reseed": "pnpm --filter api db:reseed",
     "db:studio": "pnpm --filter api db:studio",
     "db:reset": "pnpm --filter api db:reset",
-    "render:build": "pnpm install --no-frozen-lockfile && pnpm --filter web build",
+    "render:build": "NODE_ENV=development pnpm install --no-frozen-lockfile && pnpm --filter web build",
     "render:start": "pnpm --filter api release && pnpm --filter api start",
     "setup": "pnpm install && pnpm db:push && pnpm db:raw && pnpm db:seed"
   },
