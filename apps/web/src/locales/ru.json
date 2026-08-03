@@ -1,0 +1,180 @@
+{
+  "app": {
+    "name": "Suggestions",
+    "org": "Novikontas"
+  },
+  "nav": {
+    "new": "Новое предложение",
+    "mine": "Мой журнал",
+    "board": "Доска",
+    "ranks": "Рейтинг",
+    "queue": "Очередь рассмотрения",
+    "settings": "Настройки",
+    "admin": "Администрирование",
+    "signOut": "Выйти"
+  },
+  "login": {
+    "heading": "Вход",
+    "lead": "Введите рабочий адрес Novikontas. Мы отправим ссылку — пароль не нужен.",
+    "email": "Рабочий e-mail",
+    "submit": "Отправить ссылку",
+    "sentHeading": "Проверьте почту",
+    "sentLead": "Если адрес распознан, ссылка уже в пути. Она работает один раз и действует 15 минут.",
+    "again": "Отправить снова",
+    "errors": {
+      "expired": "That link has expired or was already used. Request a new one.",
+      "domain": "Only Novikontas email addresses can sign in.",
+      "inactive": "That account is not active. Contact the quality team.",
+      "missing": "That link was incomplete. Request a new one.",
+      "state": "Попытка входа истекла или выполнена в другом браузере. Попробуйте снова.",
+      "google_failed": "Вход через Google не завершён. Попробуйте снова или используйте ссылку.",
+      "google_cancelled": "Вход через Google отменён.",
+      "google_disabled": "Вход через Google в этой среде не включён."
+    }
+  },
+  "watch": {
+    "week": "Неделя",
+    "eyebrow": "Эта неделя",
+    "openUntil": "Открыта до вечера воскресенья",
+    "closesIn": "Closes in {{time}}",
+    "logged": "Отправлено",
+    "notLogged": "Ещё не отправлено",
+    "graceHeading": "Week {{week}} is still rescuable",
+    "graceLead": "You missed last week. Log a suggestion before noon today and it counts.",
+    "graceLeft": "{{time}} left",
+    "missed": "Зачтено как пропуск",
+    "exempt": "Exempt this week",
+    "friday": "Напоминание в пятницу",
+    "monday": "Окно в понедельник",
+    "close": "Закрытие"
+  },
+  "form": {
+    "heading": "Предложение этой недели",
+    "lead": "Одно в неделю. Оно не должно быть крупным — небольшое улучшение тоже важно.",
+    "title": "Одной строкой — что нужно изменить?",
+    "titlePlaceholder": "Bridge simulator briefing room needs a second whiteboard",
+    "body": "В чём проблема и что вы предлагаете?",
+    "bodyPlaceholder": "Describe what happens now, who it affects, and what you would change.",
+    "category": "Категория",
+    "categoryPlaceholder": "Choose a category",
+    "anonymous": "Отправить без моего имени",
+    "anonymousHint": "Reviewers will not see your name. Your identity is still recorded, and any access to it is logged.",
+    "submit": "Отправить предложение",
+    "submitting": "Logging…",
+    "quotaReached": "You have already logged this week's suggestion.",
+    "viewExisting": "View it",
+    "chars": "{{count}} characters"
+  },
+  "mine": {
+    "heading": "Мой журнал",
+    "lead": "Every suggestion you have logged, newest first.",
+    "empty": "Пока ничего нет",
+    "emptyCta": "Write your first suggestion",
+    "withdraw": "Отозвать",
+    "withdrawConfirm": "Withdraw this suggestion? This week's slot opens up again.",
+    "edit": "Edit"
+  },
+  "detail": {
+    "timeline": "Status history",
+    "response": "Official response",
+    "noResponse": "No response yet.",
+    "comments": "Comments",
+    "commentPlaceholder": "Add a comment",
+    "addComment": "Post comment",
+    "internal": "Internal note (staff cannot see this)",
+    "anonymous": "Submitted anonymously",
+    "submittedBy": "Logged by",
+    "assignedTo": "Assigned to",
+    "due": "Due",
+    "reference": "Reference",
+    "vote": "Support",
+    "voted": "Supported",
+    "reveal": "Reveal submitter",
+    "revealWarn": "This is recorded in the audit log."
+  },
+  "board": {
+    "heading": "Доска",
+    "lead": "What colleagues have suggested, and what has come of it.",
+    "search": "Поиск предложений",
+    "sortRecent": "Newest",
+    "sortVotes": "Most supported",
+    "allCategories": "All categories",
+    "empty": "Nothing matches that.",
+    "disabled": "The board is currently closed."
+  },
+  "ranks": {
+    "heading": "Рейтинг",
+    "lead": "Оценка по принятым и внедрённым, а не по количеству.",
+    "period": {
+      "quarter": "This quarter",
+      "year": "This year",
+      "all": "All time"
+    },
+    "you": "You are {{rank}} of {{of}}",
+    "columns": {
+      "rank": "#",
+      "name": "Name",
+      "submitted": "Logged",
+      "onTime": "On time",
+      "missed": "Missed",
+      "accepted": "Accepted",
+      "implemented": "Implemented",
+      "rate": "Accept rate",
+      "streak": "Streak",
+      "score": "Score"
+    },
+    "how": "How the score works",
+    "hiddenNames": "Names are hidden on the staff view.",
+    "hiddenMisses": "Missed weeks are only visible to administrators.",
+    "closed": "The rank list is not open to staff right now.",
+    "anon": "Colleague"
+  },
+  "settings": {
+    "heading": "Настройки",
+    "language": "Язык",
+    "reminders": "Еженедельные напоминания",
+    "remindersHint": "Friday evening, and Monday morning if the week is still open.",
+    "statusUpdates": "Обновления статуса",
+    "statusUpdatesHint": "Email me when one of my suggestions moves.",
+    "saved": "Сохранено",
+    "unsubscribed": "Weekly reminders are off."
+  },
+  "admin": {
+    "queue": "Review queue",
+    "queueLead": "Oldest first. A decision is owed within {{days}} working days.",
+    "dashboard": "Overview",
+    "filters": {
+      "all": "All open",
+      "unassigned": "Unassigned",
+      "overdue": "Overdue"
+    },
+    "assign": "Assign",
+    "unassign": "Clear",
+    "changeStatus": "Change status",
+    "reason": "Reason",
+    "reasonRequired": "A written reason is required for this decision.",
+    "qms": "ISO 9001 action reference",
+    "respond": "Write response",
+    "settingsHeading": "Controls",
+    "cycles": "Weekly cycles",
+    "runJob": "Run now",
+    "participations": "Who submitted",
+    "exempt": "Mark exempt",
+    "people": "People",
+    "audit": "Audit log",
+    "onTime": "On time",
+    "inGrace": "In grace",
+    "missed": "Missed",
+    "pending": "Pending",
+    "overdueCount": "{{count}} overdue"
+  },
+  "common": {
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "loading": "Загрузка…",
+    "error": "Something went wrong.",
+    "retry": "Повторить",
+    "of": "of",
+    "more": "Показать ещё"
+  }
+}

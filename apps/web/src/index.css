@@ -1,0 +1,114 @@
+@import 'tailwindcss';
+
+/*
+  Design direction: a ship's logbook.
+  Ruled entry rows, mono reference stamps, navigation-light colours for status.
+  Cool paper rather than warm cream — this is an instrument, not a stationery set.
+*/
+@theme {
+  --color-navy-50: #eef1f7;
+  --color-navy-100: #d6dded;
+  --color-navy-400: #3d5a94;
+  --color-navy-600: #0a3079;
+  --color-navy-700: #022367;
+  --color-navy-900: #01143c;
+
+  --color-paper: #f7f8fa;
+  --color-rule: #d3d9e3;
+  --color-ink: #1a2233;
+  --color-muted: #5b6779;
+
+  /* Navigation lights: starboard green, port red, plus a signal amber. */
+  --color-starboard: #1b7f5c;
+  --color-starboard-50: #e7f4ef;
+  --color-port: #b3342b;
+  --color-port-50: #fbecea;
+  --color-amber: #b07407;
+  --color-amber-50: #fdf3e2;
+
+  --font-weight-400: 400;
+  --font-weight-500: 500;
+  --font-weight-600: 600;
+  --font-weight-700: 700;
+
+  --font-display: 'Archivo', system-ui, sans-serif;
+  --font-sans: 'Instrument Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --radius-sm: 2px;
+  --radius-md: 3px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display tracking-tight;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-navy-700);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--color-navy-100);
+  }
+}
+
+@layer components {
+  /* The eyebrow label, used on every panel. Structure that says what a thing is. */
+  .eyebrow {
+    @apply font-display text-[10px] font-700 uppercase tracking-[0.16em] text-muted;
+  }
+  .stamp {
+    @apply font-mono text-xs tracking-tight text-muted;
+  }
+  .panel {
+    @apply border border-rule bg-white rounded-md;
+  }
+  /* Logbook rules: a hairline between entries, never a card shadow. */
+  .ruled > * + * {
+    @apply border-t border-rule;
+  }
+  .field {
+    @apply w-full border border-rule bg-white px-3 py-2.5 text-[15px] rounded-sm
+           placeholder:text-muted/60 focus:border-navy-700 focus:outline-none;
+  }
+  .btn,
+  .btn-primary,
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm px-4 py-2.5
+           font-display text-sm font-600 transition-colors disabled:opacity-45
+           disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply bg-navy-700 text-white;
+  }
+  .btn-primary:hover:not(:disabled) {
+    @apply bg-navy-600;
+  }
+  .btn-ghost {
+    @apply border border-rule bg-white text-ink;
+  }
+  .btn-ghost:hover:not(:disabled) {
+    @apply bg-navy-50;
+  }
+  /* Declared last so its padding wins when combined with a variant. */
+  .btn-sm {
+    @apply gap-1.5 px-3 py-1.5 text-[13px];
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

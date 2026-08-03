@@ -1,0 +1,35 @@
+{
+  "name": "novikontas-suggestions",
+  "private": true,
+  "version": "1.0.0",
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter \"./apps/*\" dev",
+    "dev:api": "pnpm --filter api dev",
+    "dev:web": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "start": "pnpm --filter api start",
+    "typecheck": "pnpm -r typecheck",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "db:push": "pnpm --filter api db:push",
+    "db:migrate": "pnpm --filter api db:migrate",
+    "db:raw": "pnpm --filter api db:raw",
+    "db:seed": "pnpm --filter api db:seed",
+    "db:studio": "pnpm --filter api db:studio",
+    "db:reset": "pnpm --filter api db:reset",
+    "demo": "pnpm setup && pnpm dev",
+    "demo:seed": "pnpm --filter api db:seed:demo",
+    "demo:reseed": "pnpm --filter api db:reseed:demo",
+    "render:build": "pnpm install --no-frozen-lockfile && pnpm --filter web build",
+    "render:start": "pnpm --filter api release && pnpm --filter api start",
+    "setup": "pnpm install && pnpm db:up && node scripts/wait-for-db.mjs && pnpm db:push && pnpm db:raw && pnpm demo:seed"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3"
+  }
+}

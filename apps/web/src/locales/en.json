@@ -1,0 +1,180 @@
+{
+  "app": {
+    "name": "Suggestions",
+    "org": "Novikontas"
+  },
+  "nav": {
+    "new": "New suggestion",
+    "mine": "My log",
+    "board": "Board",
+    "ranks": "Rank list",
+    "queue": "Review queue",
+    "settings": "Settings",
+    "admin": "Admin",
+    "signOut": "Sign out"
+  },
+  "login": {
+    "heading": "Sign in",
+    "lead": "Enter your Novikontas email. We send a link — no password to remember.",
+    "email": "Work email",
+    "submit": "Send sign-in link",
+    "sentHeading": "Check your inbox",
+    "sentLead": "If that address is recognised, a sign-in link is on its way. It works once and expires in 15 minutes.",
+    "again": "Send another link",
+    "errors": {
+      "expired": "That link has expired or was already used. Request a new one.",
+      "domain": "Only Novikontas email addresses can sign in.",
+      "inactive": "That account is not active. Contact the quality team.",
+      "missing": "That link was incomplete. Request a new one.",
+      "state": "That sign-in attempt expired or came from a different browser. Try again.",
+      "google_failed": "Google sign-in did not complete. Try again, or use a sign-in link.",
+      "google_cancelled": "Google sign-in was cancelled.",
+      "google_disabled": "Google sign-in is not enabled on this deployment."
+    }
+  },
+  "watch": {
+    "week": "Week",
+    "eyebrow": "This week",
+    "openUntil": "Open until Sunday night",
+    "closesIn": "Closes in {{time}}",
+    "logged": "Logged",
+    "notLogged": "Not logged yet",
+    "graceHeading": "Week {{week}} is still rescuable",
+    "graceLead": "You missed last week. Log a suggestion before noon today and it counts.",
+    "graceLeft": "{{time}} left",
+    "missed": "Recorded as missed",
+    "exempt": "Exempt this week",
+    "friday": "Fri reminder",
+    "monday": "Mon grace",
+    "close": "Closes"
+  },
+  "form": {
+    "heading": "This week's suggestion",
+    "lead": "One a week. It does not need to be large — a fix that saves someone ten minutes counts.",
+    "title": "In one line, what should change?",
+    "titlePlaceholder": "Bridge simulator briefing room needs a second whiteboard",
+    "body": "What is the problem, and what would you do?",
+    "bodyPlaceholder": "Describe what happens now, who it affects, and what you would change.",
+    "category": "Category",
+    "categoryPlaceholder": "Choose a category",
+    "anonymous": "Submit without my name",
+    "anonymousHint": "Reviewers will not see your name. Your identity is still recorded, and any access to it is logged.",
+    "submit": "Log suggestion",
+    "submitting": "Logging…",
+    "quotaReached": "You have already logged this week's suggestion.",
+    "viewExisting": "View it",
+    "chars": "{{count}} characters"
+  },
+  "mine": {
+    "heading": "My log",
+    "lead": "Every suggestion you have logged, newest first.",
+    "empty": "Nothing logged yet.",
+    "emptyCta": "Write your first suggestion",
+    "withdraw": "Withdraw",
+    "withdrawConfirm": "Withdraw this suggestion? This week's slot opens up again.",
+    "edit": "Edit"
+  },
+  "detail": {
+    "timeline": "Status history",
+    "response": "Official response",
+    "noResponse": "No response yet.",
+    "comments": "Comments",
+    "commentPlaceholder": "Add a comment",
+    "addComment": "Post comment",
+    "internal": "Internal note (staff cannot see this)",
+    "anonymous": "Submitted anonymously",
+    "submittedBy": "Logged by",
+    "assignedTo": "Assigned to",
+    "due": "Due",
+    "reference": "Reference",
+    "vote": "Support",
+    "voted": "Supported",
+    "reveal": "Reveal submitter",
+    "revealWarn": "This is recorded in the audit log."
+  },
+  "board": {
+    "heading": "Board",
+    "lead": "What colleagues have suggested, and what has come of it.",
+    "search": "Search suggestions",
+    "sortRecent": "Newest",
+    "sortVotes": "Most supported",
+    "allCategories": "All categories",
+    "empty": "Nothing matches that.",
+    "disabled": "The board is currently closed."
+  },
+  "ranks": {
+    "heading": "Rank list",
+    "lead": "Scored on what gets accepted and implemented, not on volume.",
+    "period": {
+      "quarter": "This quarter",
+      "year": "This year",
+      "all": "All time"
+    },
+    "you": "You are {{rank}} of {{of}}",
+    "columns": {
+      "rank": "#",
+      "name": "Name",
+      "submitted": "Logged",
+      "onTime": "On time",
+      "missed": "Missed",
+      "accepted": "Accepted",
+      "implemented": "Implemented",
+      "rate": "Accept rate",
+      "streak": "Streak",
+      "score": "Score"
+    },
+    "how": "How the score works",
+    "hiddenNames": "Names are hidden on the staff view.",
+    "hiddenMisses": "Missed weeks are only visible to administrators.",
+    "closed": "The rank list is not open to staff right now.",
+    "anon": "Colleague"
+  },
+  "settings": {
+    "heading": "Settings",
+    "language": "Language",
+    "reminders": "Weekly reminders",
+    "remindersHint": "Friday evening, and Monday morning if the week is still open.",
+    "statusUpdates": "Status updates",
+    "statusUpdatesHint": "Email me when one of my suggestions moves.",
+    "saved": "Saved",
+    "unsubscribed": "Weekly reminders are off."
+  },
+  "admin": {
+    "queue": "Review queue",
+    "queueLead": "Oldest first. A decision is owed within {{days}} working days.",
+    "dashboard": "Overview",
+    "filters": {
+      "all": "All open",
+      "unassigned": "Unassigned",
+      "overdue": "Overdue"
+    },
+    "assign": "Assign",
+    "unassign": "Clear",
+    "changeStatus": "Change status",
+    "reason": "Reason",
+    "reasonRequired": "A written reason is required for this decision.",
+    "qms": "ISO 9001 action reference",
+    "respond": "Write response",
+    "settingsHeading": "Controls",
+    "cycles": "Weekly cycles",
+    "runJob": "Run now",
+    "participations": "Who submitted",
+    "exempt": "Mark exempt",
+    "people": "People",
+    "audit": "Audit log",
+    "onTime": "On time",
+    "inGrace": "In grace",
+    "missed": "Missed",
+    "pending": "Pending",
+    "overdueCount": "{{count}} overdue"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "loading": "Loading…",
+    "error": "Something went wrong.",
+    "retry": "Try again",
+    "of": "of",
+    "more": "Load more"
+  }
+}

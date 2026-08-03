@@ -1,0 +1,180 @@
+{
+  "app": {
+    "name": "Suggestions",
+    "org": "Novikontas"
+  },
+  "nav": {
+    "new": "Jauns ierosinājums",
+    "mine": "Mans žurnāls",
+    "board": "Tablo",
+    "ranks": "Reitings",
+    "queue": "Izskatīšanas rinda",
+    "settings": "Iestatījumi",
+    "admin": "Administrācija",
+    "signOut": "Iziet"
+  },
+  "login": {
+    "heading": "Pieteikties",
+    "lead": "Ievadiet savu Novikontas e-pastu. Nosūtīsim saiti — parole nav vajadzīga.",
+    "email": "Darba e-pasts",
+    "submit": "Nosūtīt saiti",
+    "sentHeading": "Pārbaudiet e-pastu",
+    "sentLead": "Ja adrese ir atpazīta, saite jau ceļā. Tā darbojas vienu reizi un ir derīga 15 minūtes.",
+    "again": "Nosūtīt vēlreiz",
+    "errors": {
+      "expired": "That link has expired or was already used. Request a new one.",
+      "domain": "Only Novikontas email addresses can sign in.",
+      "inactive": "That account is not active. Contact the quality team.",
+      "missing": "That link was incomplete. Request a new one.",
+      "state": "Pieteikšanās mēģinājums beidzies vai nāca no citas pārlūkprogrammas. Mēģiniet vēlreiz.",
+      "google_failed": "Google pieteikšanās neizdevās. Mēģiniet vēlreiz vai izmantojiet saiti.",
+      "google_cancelled": "Google pieteikšanās atcelta.",
+      "google_disabled": "Google pieteikšanās šajā vidē nav iespējota."
+    }
+  },
+  "watch": {
+    "week": "Nedēļa",
+    "eyebrow": "Šī nedēļa",
+    "openUntil": "Atvērta līdz svētdienas vakaram",
+    "closesIn": "Closes in {{time}}",
+    "logged": "Reģistrēts",
+    "notLogged": "Vēl nav reģistrēts",
+    "graceHeading": "Week {{week}} is still rescuable",
+    "graceLead": "You missed last week. Log a suggestion before noon today and it counts.",
+    "graceLeft": "{{time}} left",
+    "missed": "Ieskaitīts kā izlaists",
+    "exempt": "Exempt this week",
+    "friday": "Piektdienas atgādinājums",
+    "monday": "Pirmdienas pagarinājums",
+    "close": "Noslēdzas"
+  },
+  "form": {
+    "heading": "Šīs nedēļas ierosinājums",
+    "lead": "Viens nedēļā. Tam nav jābūt lielam — arī neliels uzlabojums ir vērtīgs.",
+    "title": "Vienā rindā — kas būtu jāmaina?",
+    "titlePlaceholder": "Bridge simulator briefing room needs a second whiteboard",
+    "body": "Kāda ir problēma un ko jūs darītu?",
+    "bodyPlaceholder": "Describe what happens now, who it affects, and what you would change.",
+    "category": "Kategorija",
+    "categoryPlaceholder": "Choose a category",
+    "anonymous": "Iesniegt bez mana vārda",
+    "anonymousHint": "Reviewers will not see your name. Your identity is still recorded, and any access to it is logged.",
+    "submit": "Reģistrēt ierosinājumu",
+    "submitting": "Logging…",
+    "quotaReached": "You have already logged this week's suggestion.",
+    "viewExisting": "View it",
+    "chars": "{{count}} characters"
+  },
+  "mine": {
+    "heading": "Mans žurnāls",
+    "lead": "Every suggestion you have logged, newest first.",
+    "empty": "Vēl nekas nav reģistrēts",
+    "emptyCta": "Write your first suggestion",
+    "withdraw": "Atsaukt",
+    "withdrawConfirm": "Withdraw this suggestion? This week's slot opens up again.",
+    "edit": "Edit"
+  },
+  "detail": {
+    "timeline": "Status history",
+    "response": "Official response",
+    "noResponse": "No response yet.",
+    "comments": "Comments",
+    "commentPlaceholder": "Add a comment",
+    "addComment": "Post comment",
+    "internal": "Internal note (staff cannot see this)",
+    "anonymous": "Submitted anonymously",
+    "submittedBy": "Logged by",
+    "assignedTo": "Assigned to",
+    "due": "Due",
+    "reference": "Reference",
+    "vote": "Support",
+    "voted": "Supported",
+    "reveal": "Reveal submitter",
+    "revealWarn": "This is recorded in the audit log."
+  },
+  "board": {
+    "heading": "Tablo",
+    "lead": "What colleagues have suggested, and what has come of it.",
+    "search": "Meklēt ierosinājumus",
+    "sortRecent": "Newest",
+    "sortVotes": "Most supported",
+    "allCategories": "All categories",
+    "empty": "Nothing matches that.",
+    "disabled": "The board is currently closed."
+  },
+  "ranks": {
+    "heading": "Reitings",
+    "lead": "Vērtē pēc apstiprinātajiem un ieviestajiem, nevis pēc skaita.",
+    "period": {
+      "quarter": "This quarter",
+      "year": "This year",
+      "all": "All time"
+    },
+    "you": "You are {{rank}} of {{of}}",
+    "columns": {
+      "rank": "#",
+      "name": "Name",
+      "submitted": "Logged",
+      "onTime": "On time",
+      "missed": "Missed",
+      "accepted": "Accepted",
+      "implemented": "Implemented",
+      "rate": "Accept rate",
+      "streak": "Streak",
+      "score": "Score"
+    },
+    "how": "How the score works",
+    "hiddenNames": "Names are hidden on the staff view.",
+    "hiddenMisses": "Missed weeks are only visible to administrators.",
+    "closed": "The rank list is not open to staff right now.",
+    "anon": "Colleague"
+  },
+  "settings": {
+    "heading": "Iestatījumi",
+    "language": "Valoda",
+    "reminders": "Iknedēļas atgādinājumi",
+    "remindersHint": "Friday evening, and Monday morning if the week is still open.",
+    "statusUpdates": "Statusa paziņojumi",
+    "statusUpdatesHint": "Email me when one of my suggestions moves.",
+    "saved": "Saglabāts",
+    "unsubscribed": "Weekly reminders are off."
+  },
+  "admin": {
+    "queue": "Review queue",
+    "queueLead": "Oldest first. A decision is owed within {{days}} working days.",
+    "dashboard": "Overview",
+    "filters": {
+      "all": "All open",
+      "unassigned": "Unassigned",
+      "overdue": "Overdue"
+    },
+    "assign": "Assign",
+    "unassign": "Clear",
+    "changeStatus": "Change status",
+    "reason": "Reason",
+    "reasonRequired": "A written reason is required for this decision.",
+    "qms": "ISO 9001 action reference",
+    "respond": "Write response",
+    "settingsHeading": "Controls",
+    "cycles": "Weekly cycles",
+    "runJob": "Run now",
+    "participations": "Who submitted",
+    "exempt": "Mark exempt",
+    "people": "People",
+    "audit": "Audit log",
+    "onTime": "On time",
+    "inGrace": "In grace",
+    "missed": "Missed",
+    "pending": "Pending",
+    "overdueCount": "{{count}} overdue"
+  },
+  "common": {
+    "cancel": "Atcelt",
+    "save": "Saglabāt",
+    "loading": "Ielādē…",
+    "error": "Something went wrong.",
+    "retry": "Mēģināt vēlreiz",
+    "of": "of",
+    "more": "Ielādēt vairāk"
+  }
+}

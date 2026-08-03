@@ -1,0 +1,75 @@
+# Render blueprint — one web service plus one PostgreSQL database.
+#
+# Push this repo to GitHub, then in Render: New → Blueprint → pick the repo.
+# Everything below is created and wired automatically; the only thing to change
+# afterwards is DEMO_MODE, once you stop demoing.
+#
+# Single service on purpose: Express serves the built React app, so there is one
+# origin, the session cookie stays first-party, and there is no CORS to tune.
+
+databases:
+  - name: novikontas-suggestions-db
+    databaseName: suggestions
+    user: suggestions
+    plan: free
+    region: frankfurt # EU — employee data stays in the EU
+
+services:
+  - type: web
+    name: novikontas-suggestions
+    runtime: node
+    plan: free
+    region: frankfurt
+    branch: main
+    healthCheckPath: /api/health
+
+    buildCommand: corepack enable && pnpm install --no-frozen-lockfile && pnpm --filter web build
+    # release: prisma generate → db push → raw.sql → demo seed. All idempotent,
+    # so a restart or redeploy is safe and will not duplicate data.
+    startCommand: pnpm --filter api release && pnpm --filter api start
+
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+
+      - key: DATABASE_URL
+        fromDatabase:
+          name: novikontas-suggestions-db
+          property: connectionString
+
+      - key: NODE_ENV
+        value: production
+
+      # One service serves both halves.
+      - key: SERVE_WEB
+        value: "true"
+
+      # One-click sign-in as any seeded persona. TURN THIS OFF for real use —
+      # with it on, anyone who can reach the URL can sign in as an administrator.
+      - key: DEMO_MODE
+        value: "true"
+
+      # No Resend account needed for the demo: mail is logged, not sent.
+      - key: MAIL_DRY_RUN
+        value: "true"
+
+      - key: ALLOWED_EMAIL_DOMAINS
+        value: novikontas.org,novikontas.lv
+
+      - key: TIMEZONE
+        value: Europe/Riga
+
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: UNSUBSCRIBE_SECRET
+        generateValue: true
+
+      - key: MAIL_FROM
+        value: Novikontas Suggestions <suggestions@novikontas.org>
+
+      # Left blank deliberately. Add a Resend key and set MAIL_DRY_RUN=false when
+      # you want real email.
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_WEBHOOK_SECRET
+        sync: false
