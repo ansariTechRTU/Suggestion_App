@@ -7,21 +7,6 @@ export interface Rendered {
   html: string;
 }
 
-export function loginLinkEmail(o: { locale: Locale; url: string }): Rendered {
-  const t = COPY[o.locale];
-  return {
-    subject: t.loginSubject,
-    html: layout({
-      preheader: t.loginBody,
-      heading: t.loginHeading,
-      bodyHtml: `<p>${t.loginBody}</p>`,
-      ctaLabel: t.loginCta,
-      ctaUrl: o.url,
-      footerHtml: `${escapeHtml(t.loginExpiry)}<br>${escapeHtml(t.ignoreIfNotYou)}`,
-    }),
-  };
-}
-
 export interface ReminderContext {
   locale: Locale;
   weekLabel: string;
@@ -44,11 +29,11 @@ function reminderBody(t: (typeof COPY)[Locale], c: ReminderContext, intro: strin
     ? `<div style="margin:18px 0 4px;padding:14px 16px;background:#f7f8fa;
          border-left:3px solid #1b7f5c;border-radius:2px">
          <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;
-           color:#5b6779;margin-bottom:4px">${escapeHtml(t.recentlyImplemented)}</div>
-         <div style="font-size:14px;font-weight:600;color:#1a2233">
+           color:#56637d;margin-bottom:4px">${escapeHtml(t.recentlyImplemented)}</div>
+         <div style="font-size:14px;font-weight:600;color:#011111">
            ${escapeHtml(c.highlight.title)}</div>
          <div style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-           font-size:12px;color:#5b6779">${escapeHtml(c.highlight.referenceCode)}</div>
+           font-size:12px;color:#56637d">${escapeHtml(c.highlight.referenceCode)}</div>
        </div>`
     : '';
 
@@ -65,7 +50,7 @@ export function fridayReminderEmail(c: ReminderContext): Rendered {
       bodyHtml: reminderBody(t, c, t.fridayBody),
       ctaLabel: t.fridayCta,
       ctaUrl: c.submitUrl,
-      footerHtml: `<a href="${c.unsubscribeUrl}" style="color:#5b6779">${escapeHtml(
+      footerHtml: `<a href="${c.unsubscribeUrl}" style="color:#56637d">${escapeHtml(
         t.unsubscribe,
       )}</a>`,
     }),
@@ -82,7 +67,7 @@ export function mondayReminderEmail(c: ReminderContext): Rendered {
       bodyHtml: reminderBody(t, c, t.mondayBody(c.weekLabel)),
       ctaLabel: t.mondayCta,
       ctaUrl: c.submitUrl,
-      footerHtml: `<a href="${c.unsubscribeUrl}" style="color:#5b6779">${escapeHtml(
+      footerHtml: `<a href="${c.unsubscribeUrl}" style="color:#56637d">${escapeHtml(
         t.unsubscribe,
       )}</a>`,
     }),
@@ -99,7 +84,7 @@ export function statusChangedEmail(o: {
   const t = COPY[o.locale];
   const reason = o.reason
     ? `<blockquote style="margin:14px 0;padding:10px 14px;border-left:3px solid #d3d9e3;
-         color:#5b6779">${escapeHtml(o.reason)}</blockquote>`
+         color:#56637d">${escapeHtml(o.reason)}</blockquote>`
     : '';
   return {
     subject: t.statusSubject(o.referenceCode),
@@ -126,7 +111,7 @@ export function responsePostedEmail(o: {
       preheader: t.responseBody(o.referenceCode),
       heading: t.responseHeading,
       bodyHtml: `<p>${t.responseBody(escapeHtml(o.referenceCode))}</p>
-        <blockquote style="margin:14px 0;padding:10px 14px;border-left:3px solid #022367">
+        <blockquote style="margin:14px 0;padding:10px 14px;border-left:3px solid #0a2463">
         ${escapeHtml(o.responseBody)}</blockquote>`,
       ctaLabel: t.viewCta,
       ctaUrl: o.url,

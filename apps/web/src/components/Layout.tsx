@@ -61,11 +61,14 @@ export function Layout({ me }: { me: Me }) {
     <div className="min-h-screen">
       <header className="border-b border-rule bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 pt-4">
-          <div>
-            <div className="font-display text-[11px] font-700 uppercase tracking-[0.16em] text-navy-700">
-              {t('app.org')}
+          <div className="flex items-center gap-3">
+            <img src="/logo-mark.png" alt="" className="h-8 w-auto" />
+            <div>
+              <div className="font-display text-[11px] font-700 uppercase tracking-[0.16em] text-navy-700">
+                {t('app.org')}
+              </div>
+              <div className="eyebrow">{t('app.name')}</div>
             </div>
-            <div className="eyebrow">{t('app.name')}</div>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex gap-1" role="group" aria-label="Language">

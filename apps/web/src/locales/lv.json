@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "Suggestions",
-    "org": "Novikontas"
+    "org": "Novikontas Academy"
   },
   "nav": {
     "new": "Jauns ierosinājums",
@@ -15,21 +15,13 @@
   },
   "login": {
     "heading": "Pieteikties",
-    "lead": "Ievadiet savu Novikontas e-pastu. Nosūtīsim saiti — parole nav vajadzīga.",
-    "email": "Darba e-pasts",
-    "submit": "Nosūtīt saiti",
-    "sentHeading": "Pārbaudiet e-pastu",
-    "sentLead": "Ja adrese ir atpazīta, saite jau ceļā. Tā darbojas vienu reizi un ir derīga 15 minūtes.",
-    "again": "Nosūtīt vēlreiz",
+    "lead": "Pieteicieties ar savu Google kontu.",
     "errors": {
-      "expired": "That link has expired or was already used. Request a new one.",
-      "domain": "Only Novikontas email addresses can sign in.",
-      "inactive": "That account is not active. Contact the quality team.",
-      "missing": "That link was incomplete. Request a new one.",
+      "domain": "Pieteikties var tikai ar atļautu domēnu kontiem.",
+      "inactive": "Šis konts nav aktīvs. Sazinieties ar kvalitātes komandu.",
       "state": "Pieteikšanās mēģinājums beidzies vai nāca no citas pārlūkprogrammas. Mēģiniet vēlreiz.",
-      "google_failed": "Google pieteikšanās neizdevās. Mēģiniet vēlreiz vai izmantojiet saiti.",
-      "google_cancelled": "Google pieteikšanās atcelta.",
-      "google_disabled": "Google pieteikšanās šajā vidē nav iespējota."
+      "google_failed": "Google pieteikšanās neizdevās. Mēģiniet vēlreiz.",
+      "google_cancelled": "Google pieteikšanās atcelta."
     }
   },
   "watch": {

@@ -9,21 +9,19 @@ to guess later why a package is present.
 
 ## 1. Install on the machine first
 
-| Tool               | Version         | Verify      | Where from                                                           |
-| ------------------ | --------------- | ----------- | -------------------------------------------------------------------- |
-| **Node.js**        | 22 LTS or newer | `node -v`   | [nodejs.org](https://nodejs.org) · or `nvm install 22 && nvm use 22` |
-| **pnpm**           | 9 or newer      | `pnpm -v`   | `npm install -g pnpm`                                                |
-| **Docker Desktop** | current         | `docker -v` | [docker.com](https://www.docker.com/products/docker-desktop)         |
-| **Git**            | any             | `git -v`    | [git-scm.com](https://git-scm.com)                                   |
+| Tool         | Version         | Verify    | Where from                                                           |
+| ------------ | --------------- | --------- | --------------------------------------------------------------------- |
+| **Node.js**  | 22 LTS or newer | `node -v` | [nodejs.org](https://nodejs.org) · or `nvm install 22 && nvm use 22` |
+| **pnpm**     | 9 or newer      | `pnpm -v` | `npm install -g pnpm`                                                |
+| **Git**      | any             | `git -v`  | [git-scm.com](https://git-scm.com)                                   |
 
 **Optional**
 
-| Tool                       | Why                                                                                         |
-| -------------------------- | ------------------------------------------------------------------------------------------- |
+| Tool                       | Why                                                                          |
+| -------------------------- | ----------------------------------------------------------------------------- |
 | `psql` (PostgreSQL client) | Not required. `pnpm db:raw` runs `raw.sql` through Prisma, so nothing beyond Node is needed |
-| Your own PostgreSQL 16     | Alternative to Docker — skip `pnpm db:up` and point `DATABASE_URL` at it                    |
 
-Docker supplies PostgreSQL, so you do **not** need Postgres installed locally.
+The database is Supabase Postgres (see §2) — nothing to install locally, no Docker required.
 
 ### VS Code extensions (optional, recommended)
 
@@ -38,15 +36,16 @@ Docker supplies PostgreSQL, so you do **not** need Postgres installed locally.
 
 ## 2. External accounts
 
-| Service                          | Needed for                                                   | When                                                                                                                                                                                                      |
-| -------------------------------- | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **[Google Cloud](https://console.cloud.google.com)** | Google Workspace sign-in | **Not needed for the demo.** Required for a real rollout — an OAuth 2.0 client ID takes about fifteen minutes to create. Free |
-| **[Resend](https://resend.com)** | All outbound email: sign-in links, reminders, status updates | **Not needed for the demo.** `MAIL_DRY_RUN=true` prints mail to the console, and demo mode skips email sign-in entirely. Required before a real launch, along with domain verification (SPF, DKIM, DMARC) |
-| **[Render](https://render.com)** | Hosting                                                      | Free plan is enough for the demo. `render.yaml` provisions the database and service                                                                                                                       |
+| Service                                               | Needed for                                        | When                                                                                                                                    |
+| ------------------------------------------------------ | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| **[Supabase](https://supabase.com)**                  | PostgreSQL database                                | Always. Create a project and copy the connection string into `DATABASE_URL`                                                              |
+| **[Google Cloud](https://console.cloud.google.com)**  | Sign-in — the only way into the app                | Always. An OAuth 2.0 client ID takes about fifteen minutes to create. Free                                                               |
+| **[Resend](https://resend.com)**                      | Outbound email: reminders, status updates          | Not needed to start. `MAIL_DRY_RUN=true` prints mail to the console. Required before a real launch, along with domain verification (SPF, DKIM, DMARC) |
+| **[Render](https://render.com)**                      | Hosting                                            | Free plan works for a first deploy. `render.yaml` provisions the web service (not the database — see Supabase above)                     |
 
 No Redis and no separate queue server — pg-boss runs the schedule inside
-PostgreSQL. Google is the only identity provider, and it is optional: without it
-the magic-link flow still enforces the same domain allowlist.
+PostgreSQL. Google is the only identity provider; there is no password or
+magic-link fallback.
 
 ---
 
@@ -127,17 +126,18 @@ the magic-link flow still enforces the same domain allowlist.
 | ------------------------ | ---------------------------------------------------------------------------------- |
 | Redis / BullMQ           | `pg-boss` — the database is already there                                          |
 | `react-email`            | Plain HTML templates in `packages/emails`                                          |
-| bcrypt / argon2          | No passwords at all: sign-in is a magic link to an org email                       |
+| bcrypt / argon2          | No passwords at all: sign-in is Google OAuth only                                  |
 | Redux / Zustand          | TanStack Query for server state, `useState` for local                              |
 | An ORM other than Prisma | Prisma's typed client and readable migration history matter for the ISO 9001 trail |
 | `tailwind.config.js`     | Tailwind v4 defines tokens in CSS                                                  |
+| Render-managed Postgres  | Supabase Postgres — see §2                                                          |
 
 ---
 
 ## 8. Verifying the install
 
 ```bash
-pnpm setup            # install, database, schema, raw.sql, demo seed — one command
+pnpm setup            # install, schema, raw.sql, seed — one command (needs DATABASE_URL set)
 pnpm typecheck        # all four packages must pass
 pnpm dev              # API :4000, web :5173
 ```
@@ -146,10 +146,9 @@ Step by step, if you prefer:
 
 ```bash
 pnpm install          # every workspace, then `prisma generate` via postinstall
-pnpm db:up            # Postgres 16 container on :5432
-pnpm db:push          # schema straight from schema.prisma
+pnpm db:push          # schema straight from schema.prisma, against Supabase
 pnpm db:raw           # tsvector column, quota index, vote trigger
-pnpm demo:seed        # 24 staff, 11 cycles, 172 suggestions
+pnpm db:seed          # settings, categories, test users — no suggestions
 ```
 
 `pnpm-lock.yaml` is committed, so `pnpm install` reproduces exact versions. Use

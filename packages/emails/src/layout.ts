@@ -4,10 +4,10 @@
  * exactly. Swap in react-email later if the templates outgrow this.
  */
 
-const NAVY = '#022367';
-const RULE = '#d3d9e3';
-const INK = '#1a2233';
-const MUTED = '#5b6779';
+const NAVY = '#0a2463'; // Novikontas Academy — Navy Blue
+const RULE = '#d7dee8';
+const INK = '#011111'; // Pitch Black
+const MUTED = '#56637d';
 
 export interface LayoutOptions {
   preheader: string;
@@ -43,7 +43,7 @@ export function layout(o: LayoutOptions): string {
       style="max-width:560px;background:#fff;border:1px solid ${RULE};border-radius:4px">
       <tr><td style="padding:24px 28px 0">
         <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-          color:${NAVY};font-weight:700">Novikontas</div>
+          color:${NAVY};font-weight:700">Novikontas Academy</div>
         <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;
           color:${MUTED}">Staff suggestions</div>
       </td></tr>

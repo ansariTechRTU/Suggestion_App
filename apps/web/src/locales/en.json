@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "Suggestions",
-    "org": "Novikontas"
+    "org": "Novikontas Academy"
   },
   "nav": {
     "new": "New suggestion",
@@ -15,21 +15,13 @@
   },
   "login": {
     "heading": "Sign in",
-    "lead": "Enter your Novikontas email. We send a link — no password to remember.",
-    "email": "Work email",
-    "submit": "Send sign-in link",
-    "sentHeading": "Check your inbox",
-    "sentLead": "If that address is recognised, a sign-in link is on its way. It works once and expires in 15 minutes.",
-    "again": "Send another link",
+    "lead": "Sign in with your Google account.",
     "errors": {
-      "expired": "That link has expired or was already used. Request a new one.",
-      "domain": "Only Novikontas email addresses can sign in.",
+      "domain": "Only accounts on an allowed domain can sign in.",
       "inactive": "That account is not active. Contact the quality team.",
-      "missing": "That link was incomplete. Request a new one.",
       "state": "That sign-in attempt expired or came from a different browser. Try again.",
-      "google_failed": "Google sign-in did not complete. Try again, or use a sign-in link.",
-      "google_cancelled": "Google sign-in was cancelled.",
-      "google_disabled": "Google sign-in is not enabled on this deployment."
+      "google_failed": "Google sign-in did not complete. Try again.",
+      "google_cancelled": "Google sign-in was cancelled."
     }
   },
   "watch": {

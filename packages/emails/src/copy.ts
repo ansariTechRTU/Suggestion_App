@@ -1,11 +1,6 @@
 import type { Locale } from '@nk/shared';
 
 type Dict = {
-  loginSubject: string;
-  loginHeading: string;
-  loginBody: string;
-  loginCta: string;
-  loginExpiry: string;
   fridaySubject: (week: string) => string;
   fridayHeading: string;
   fridayBody: string;
@@ -28,15 +23,9 @@ type Dict = {
   assignedBody: (code: string) => string;
   viewCta: string;
   unsubscribe: string;
-  ignoreIfNotYou: string;
 };
 
 const en: Dict = {
-  loginSubject: 'Your sign-in link',
-  loginHeading: 'Sign in',
-  loginBody: 'Use the link below to sign in. It works once and only from this email.',
-  loginCta: 'Sign in',
-  loginExpiry: 'The link expires in 15 minutes.',
   fridaySubject: (w) => `Your suggestion for week ${w}`,
   fridayHeading: 'You have not logged a suggestion this week',
   fridayBody:
@@ -61,17 +50,10 @@ const en: Dict = {
   assignedBody: (c) => `${c} has been assigned to you to take forward.`,
   viewCta: 'Open suggestion',
   unsubscribe: 'Stop weekly reminders',
-  ignoreIfNotYou: 'If you did not request this, you can ignore this email.',
 };
 
 const lv: Dict = {
   ...en,
-  loginSubject: 'Jūsu pieteikšanās saite',
-  loginHeading: 'Pieteikties',
-  loginBody:
-    'Izmantojiet zemāk esošo saiti, lai pieteiktos. Tā darbojas vienu reizi un tikai no šī e-pasta.',
-  loginCta: 'Pieteikties',
-  loginExpiry: 'Saite ir derīga 15 minūtes.',
   fridaySubject: (w) => `Jūsu ierosinājums ${w}. nedēļai`,
   fridayHeading: 'Šonedēļ vēl nav reģistrēts ierosinājums',
   fridayBody:
@@ -88,17 +70,10 @@ const lv: Dict = {
   statThisYear: 'šogad',
   viewCta: 'Atvērt ierosinājumu',
   unsubscribe: 'Atteikties no iknedēļas atgādinājumiem',
-  ignoreIfNotYou: 'Ja jūs to nepieprasījāt, ignorējiet šo e-pastu.',
 };
 
 const ru: Dict = {
   ...en,
-  loginSubject: 'Ссылка для входа',
-  loginHeading: 'Вход',
-  loginBody:
-    'Используйте ссылку ниже, чтобы войти. Она работает один раз и только с этого адреса.',
-  loginCta: 'Войти',
-  loginExpiry: 'Ссылка действует 15 минут.',
   fridaySubject: (w) => `Ваше предложение за неделю ${w}`,
   fridayHeading: 'На этой неделе предложение ещё не отправлено',
   fridayBody:
@@ -115,7 +90,6 @@ const ru: Dict = {
   statThisYear: 'за год',
   viewCta: 'Открыть предложение',
   unsubscribe: 'Отключить напоминания',
-  ignoreIfNotYou: 'Если вы этого не запрашивали, просто проигнорируйте письмо.',
 };
 
 /** LT and KA fall back to EN until translations are supplied. */

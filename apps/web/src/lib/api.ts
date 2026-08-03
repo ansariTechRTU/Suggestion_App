@@ -144,12 +144,3 @@ export interface LeaderboardResponse {
   period: 'all' | 'year' | 'quarter';
   visibility: { namesHidden: boolean; missesHidden: boolean };
 }
-
-export interface DemoUser {
-  email: string;
-  fullName: string;
-  role: 'STAFF' | 'ADMIN';
-  division: string;
-  department: string | null;
-  locale: string;
-}

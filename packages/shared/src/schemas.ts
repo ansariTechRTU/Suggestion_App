@@ -9,8 +9,6 @@ import {
 
 export const emailSchema = z.string().trim().toLowerCase().email().max(254);
 
-export const requestLinkSchema = z.object({ email: emailSchema });
-
 export const createSuggestionSchema = z.object({
   title: z.string().trim().min(8, 'Give it a title of at least 8 characters').max(140),
   body: z.string().trim().min(40, 'Describe the suggestion in at least 40 characters').max(4000),

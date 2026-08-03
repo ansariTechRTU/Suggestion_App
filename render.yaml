@@ -1,18 +1,11 @@
-# Render blueprint — one web service plus one PostgreSQL database.
+# Render blueprint — one web service. The database is Supabase Postgres, not a
+# Render-managed database, so DATABASE_URL is pasted in by hand after the first
+# deploy (Render dashboard -> service -> Environment).
 #
 # Push this repo to GitHub, then in Render: New → Blueprint → pick the repo.
-# Everything below is created and wired automatically; the only thing to change
-# afterwards is DEMO_MODE, once you stop demoing.
 #
 # Single service on purpose: Express serves the built React app, so there is one
 # origin, the session cookie stays first-party, and there is no CORS to tune.
-
-databases:
-  - name: novikontas-suggestions-db
-    databaseName: suggestions
-    user: suggestions
-    plan: free
-    region: frankfurt # EU — employee data stays in the EU
 
 services:
   - type: web
@@ -24,7 +17,7 @@ services:
     healthCheckPath: /api/health
 
     buildCommand: corepack enable && pnpm install --no-frozen-lockfile && pnpm --filter web build
-    # release: prisma generate → db push → raw.sql → demo seed. All idempotent,
+    # release: prisma generate → db push → raw.sql → seed. All idempotent,
     # so a restart or redeploy is safe and will not duplicate data.
     startCommand: pnpm --filter api release && pnpm --filter api start
 
@@ -32,10 +25,12 @@ services:
       - key: NODE_VERSION
         value: "22"
 
-      - key: DATABASE_URL
-        fromDatabase:
-          name: novikontas-suggestions-db
-          property: connectionString
+      # Supabase project -> "Connect" button -> ORMs / Prisma tab gives you
+      # both of these ready-made.
+      - key: DATABASE_URL   # pooled, pgbouncer transaction mode, port 6543
+        sync: false
+      - key: DIRECT_URL     # unpooled, session mode, port 5432 — db push/migrate only
+        sync: false
 
       - key: NODE_ENV
         value: production
@@ -44,17 +39,10 @@ services:
       - key: SERVE_WEB
         value: "true"
 
-      # One-click sign-in as any seeded persona. TURN THIS OFF for real use —
-      # with it on, anyone who can reach the URL can sign in as an administrator.
-      - key: DEMO_MODE
-        value: "true"
-
-      # No Resend account needed for the demo: mail is logged, not sent.
-      - key: MAIL_DRY_RUN
-        value: "true"
-
+      # Comma-separated. Leave blank to let any Google account sign in; set
+      # once ready to restrict to your organisation's domain(s).
       - key: ALLOWED_EMAIL_DOMAINS
-        value: novikontas.org,novikontas.lv
+        value: ""
 
       - key: TIMEZONE
         value: Europe/Riga
@@ -67,9 +55,19 @@ services:
       - key: MAIL_FROM
         value: Novikontas Suggestions <suggestions@novikontas.org>
 
-      # Left blank deliberately. Add a Resend key and set MAIL_DRY_RUN=false when
-      # you want real email.
+      # No Resend account needed until you want real email.
+      - key: MAIL_DRY_RUN
+        value: "true"
       - key: RESEND_API_KEY
         sync: false
       - key: RESEND_WEBHOOK_SECRET
         sync: false
+
+      # Required — Google Cloud Console -> Credentials -> OAuth client ID.
+      # Authorised redirect URI: https://YOUR-RENDER-URL/api/auth/google/callback
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_HOSTED_DOMAIN
+        value: ""

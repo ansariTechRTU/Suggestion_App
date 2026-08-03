@@ -21,8 +21,8 @@ loadEnv({ path: resolve(here, '../.env') });
 
 if (!process.env.DATABASE_URL) {
   console.error(
-    'DATABASE_URL is not set. Copy .env.demo to .env in the repository root:\n' +
-      '  cp .env.demo .env      (PowerShell: Copy-Item .env.demo .env)',
+    'DATABASE_URL is not set. Copy .env.example to .env in the repository root and fill it in:\n' +
+      '  cp .env.example .env      (PowerShell: Copy-Item .env.example .env)',
   );
   process.exit(1);
 }

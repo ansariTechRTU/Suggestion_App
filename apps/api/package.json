@@ -16,9 +16,8 @@
     "postinstall": "prisma generate",
     "db:migrate:new": "node scripts/prisma.mjs migrate dev",
     "db:push": "tsx prisma/pre-push.ts && node scripts/prisma.mjs db push --skip-generate",
-    "db:seed:demo": "tsx prisma/seed-demo.ts",
-    "db:reseed:demo": "tsx prisma/seed-demo.ts --reseed",
-    "release": "prisma generate && tsx prisma/pre-push.ts && node scripts/prisma.mjs db push --accept-data-loss --skip-generate && tsx prisma/apply-raw.ts && tsx prisma/seed-demo.ts"
+    "db:reseed": "tsx prisma/seed.ts --reseed",
+    "release": "prisma generate && tsx prisma/pre-push.ts && node scripts/prisma.mjs db push --accept-data-loss --skip-generate && tsx prisma/apply-raw.ts && tsx prisma/seed.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

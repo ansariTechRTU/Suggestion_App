@@ -1,9 +1,6 @@
 import crypto from 'node:crypto';
 import { env } from '../env.js';
 
-export const randomToken = () => crypto.randomBytes(32).toString('base64url');
-export const hashToken = (t: string) => crypto.createHash('sha256').update(t).digest('hex');
-
 /** Signed, stateless unsubscribe token so opting out never needs a login. */
 export function signUnsubscribe(userId: string): string {
   const sig = crypto

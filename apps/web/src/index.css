@@ -4,19 +4,27 @@
   Design direction: a ship's logbook.
   Ruled entry rows, mono reference stamps, navigation-light colours for status.
   Cool paper rather than warm cream — this is an instrument, not a stationery set.
+
+  Palette and type are the Novikontas Academy brand kit: Navy Blue, Novikontas
+  Blue, Steel Blue, Pitch Black, Light Grey, Pure White; Raleway throughout.
+  Status colours (starboard/port/amber) are functional, not brand identity —
+  accepted/rejected/pending need to stay green/red/amber regardless of brand.
 */
 @theme {
-  --color-navy-50: #eef1f7;
-  --color-navy-100: #d6dded;
-  --color-navy-400: #3d5a94;
-  --color-navy-600: #0a3079;
-  --color-navy-700: #022367;
-  --color-navy-900: #01143c;
+  --color-navy-50: #e7ebf0; /* Light Grey */
+  --color-navy-100: #d2dbe8;
+  --color-navy-400: #415c8f; /* Steel Blue */
+  --color-navy-600: #123268;
+  --color-navy-700: #0a2463; /* Navy Blue */
+  --color-navy-900: #011111; /* Pitch Black */
 
-  --color-paper: #f7f8fa;
-  --color-rule: #d3d9e3;
-  --color-ink: #1a2233;
-  --color-muted: #5b6779;
+  --color-brand: #53a7db; /* Novikontas Blue — the logo's accent stroke */
+  --color-brand-50: #e9f4fb;
+
+  --color-paper: #f4f6f9;
+  --color-rule: #d7dee8;
+  --color-ink: #011111;
+  --color-muted: #56637d;
 
   /* Navigation lights: starboard green, port red, plus a signal amber. */
   --color-starboard: #1b7f5c;
@@ -31,8 +39,8 @@
   --font-weight-600: 600;
   --font-weight-700: 700;
 
-  --font-display: 'Archivo', system-ui, sans-serif;
-  --font-sans: 'Instrument Sans', system-ui, sans-serif;
+  --font-display: 'Raleway', system-ui, sans-serif;
+  --font-sans: 'Raleway', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
   --radius-sm: 2px;

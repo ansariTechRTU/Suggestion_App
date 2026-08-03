@@ -1,131 +1,95 @@
-# Novikontas Staff Suggestion Platform — Demo Build
+# Novikontas Staff Suggestion Platform
 
 An internal web app where staff log **one suggestion per week**, and every
 suggestion gets an answer. Reminder Friday evening, a second chance Monday
 morning, and a rank list scored on what actually gets accepted.
 
-**This build is configured as a demo.** No passwords, no email account, no API
-keys. It ships with 24 staff, 11 weeks of history and 172 suggestions already in
-place, and you sign in by clicking a name.
+Sign-in is **Google only** — no passwords, no magic links. Right now any
+Google account can sign in; set `ALLOWED_EMAIL_DOMAINS` once you're ready to
+restrict it to your organisation's own domain(s).
 
-**Stack:** PostgreSQL · Express · React · Node (PERN) — Prisma, Tailwind v4,
-Resend, pg-boss, in a pnpm monorepo, TypeScript throughout.
-
----
-
-## Deploy to Render from GitHub
-
-```bash
-git init && git add -A && git commit -m "Suggestion platform demo"
-git remote add origin git@github.com:<you>/<repo>.git
-git push -u origin main
-```
-
-Then in Render: **New → Blueprint → select the repo → Apply.**
-
-`render.yaml` creates everything — a free PostgreSQL instance in Frankfurt and one
-web service — and generates the session secrets itself. Nothing to configure by
-hand.
-
-First boot takes a few minutes: install, build the frontend, push the schema,
-apply `raw.sql`, then seed the demo data. When the health check at `/api/health`
-goes green, open the service URL and click a name to sign in.
-
-**One service, not two.** Express serves the built React app, so there is a single
-origin, the session cookie stays first-party, and there is no CORS to tune.
-
-> **Free plan note:** the service sleeps after inactivity, so the first request
-> after a pause takes ~30 seconds. Render's free Postgres also expires after 30
-> days — fine for a demo, not for anything real.
-
-### The one thing you must change for real use
-
-```
-DEMO_MODE=false
-```
-
-With it on, **anyone who can reach the URL can sign in as an administrator.**
-That is the point during a demo and unacceptable afterwards. Turning it off
-restores the real flow: a magic link to an allowlisted org email address.
+**Stack:** Supabase PostgreSQL · Express · React · Node (PERN) — Prisma,
+Tailwind v4, Resend, pg-boss, in a pnpm monorepo, TypeScript throughout.
 
 ---
+
+## Prerequisites
+
+- A [Supabase](https://supabase.com) project (free tier is fine) — the database
+- A Google Cloud OAuth 2.0 client — sign-in (see below)
+- Node 22+, pnpm 9+, Git
+
+No Docker, no local Postgres: the app talks to Supabase from both local dev and
+production.
 
 ## Run it locally
 
-**Prerequisites:** Node 22+, pnpm 9+, Docker Desktop, Git.
-
 ```bash
 npm install -g pnpm
-
-cp .env.demo .env      # PowerShell: Copy-Item .env.demo .env
-pnpm demo
+cp .env.example .env      # PowerShell: Copy-Item .env.example .env
 ```
 
-That is the whole setup. `pnpm demo` installs every dependency across all four
-packages, starts PostgreSQL, waits for it to accept connections, pushes the
-schema, applies `raw.sql`, seeds the demo data, and starts both servers.
+Fill in `.env`:
 
-Then open <http://localhost:5173> and click a name to sign in.
+```
+DATABASE_URL=...          # Supabase project -> Connect -> ORMs/Prisma tab -> pooled URL
+DIRECT_URL=...             # same panel -> unpooled URL, used only by db push/migrate
+GOOGLE_CLIENT_ID=...       # see "Setting up Google sign-in" below
+GOOGLE_CLIENT_SECRET=...
+```
 
-To install and prepare the database _without_ starting the servers — useful the
-first time, so you can read the output — run `pnpm setup` and then `pnpm dev`.
+Then:
+
+```bash
+pnpm setup    # install, push the schema, apply raw.sql, seed settings/categories/test users
+pnpm dev      # API :4000, web :5173
+```
+
+Open <http://localhost:5173> and sign in with Google.
 
 The steps `pnpm setup` runs, if you would rather do them one at a time:
 
 ```bash
-pnpm install                    # all workspaces + prisma generate
-pnpm db:up                      # PostgreSQL 16 in Docker on :5432
-node scripts/wait-for-db.mjs    # poll until it is actually accepting connections
-pnpm db:push                    # schema straight from schema.prisma
-pnpm db:raw                     # tsvector column, quota index, vote trigger
-pnpm demo:seed                  # 24 staff, 11 cycles, 172 suggestions
-pnpm dev                        # API :4000 · web :5173
+pnpm install    # all workspaces + prisma generate
+pnpm db:push    # schema straight from schema.prisma, against Supabase
+pnpm db:raw     # tsvector column, quota index, vote trigger
+pnpm db:seed    # settings, categories, a handful of test users — no suggestions
+pnpm dev        # API :4000 · web :5173
 ```
-
-### Without Docker
-
-Docker only supplies PostgreSQL. If you already run PostgreSQL 16 locally, point
-`DATABASE_URL` in `.env` at it and skip `pnpm db:up`:
-
-```
-DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/suggestions?schema=public"
-```
-
-Then `pnpm install && pnpm db:push && pnpm db:raw && pnpm demo:seed && pnpm dev`.
 
 ### If something goes wrong
 
 | Symptom                                            | Cause                                                                                                                                                                                |
-| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `Invalid environment` on API start                 | No `.env` in the repository root — `cp .env.demo .env`                                                                                                                               |
-| `timed out. Is Docker running?`                    | Docker Desktop is not started, or :5432 is taken by another PostgreSQL                                                                                                               |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Invalid environment` on API start                 | No `.env`, or `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` are blank — both are required                                                                                                |
 | Port 5173 or 4000 already in use                   | Stop the other process, or change `PORT` in `.env`                                                                                                                                   |
-| Sign-in link never arrives                         | Expected: `MAIL_DRY_RUN=true` prints it to the API console instead                                                                                                                   |
-| `column "search_vector" ... is a generated column` | An older build could not re-run `db:push` after `db:raw`. Fixed: `db:push` now drops the generated column first and `db:raw` restores it. Always run the two together, in that order |
+| Can't connect to the database                      | Check `DATABASE_URL`/`DIRECT_URL` — use the password from Supabase's Connect panel (reset it there if forgotten), not your dashboard login                                           |
+| `db push`/`db migrate` hangs or errors oddly       | `DIRECT_URL` is missing or still pooled (port 6543) — it must be the unpooled, session-mode URL (port 5432)                                                                          |
+| `column "search_vector" ... is a generated column` | `db:push` drops the generated column first and `db:raw` restores it. Always run the two together, in that order                                                                     |
 
 ---
 
 ## Signing in
 
-Three ways in, and which ones appear depends on configuration:
+Google is the only way in. The authorisation-code flow verifies the ID token's
+signature, issuer and audience against Google's published keys before creating
+a session.
 
-| Method               | When it shows                                         | Who it lets in                                                                               |
-| -------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| **Google Workspace** | `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set | Verified Workspace accounts on an allowlisted domain                                         |
-| **Magic link**       | Always                                                | Any allowlisted address; link is emailed, or printed to the console when `MAIL_DRY_RUN=true` |
-| **Persona picker**   | `DEMO_MODE=true`                                      | Any seeded account, one click, no password                                                   |
+**Domain restriction is opt-in** via `ALLOWED_EMAIL_DOMAINS` (comma-separated):
+
+- **Blank (current default):** any Google account that passes Google's own
+  `email_verified` check can sign in — personal Gmail included.
+- **Set:** only Workspace accounts whose verified `hd` claim matches one of the
+  listed domains are accepted. This is the state to move to once the
+  organisation's Workspace domain is ready to enforce.
 
 ### Setting up Google sign-in
 
-Fifteen minutes in the Google Cloud Console, and the result is that only
-@novikontas.org accounts can reach the app.
-
 1. **Create a project** at <https://console.cloud.google.com> (or reuse one).
-2. **APIs & Services → OAuth consent screen.** Choose **Internal** if the project
-   sits inside the Novikontas Workspace — that alone stops anyone outside the
-   organisation from even reaching the consent screen. Choose External only if
-   you have no Workspace access, in which case the domain check below is doing
-   all of the work.
+2. **APIs & Services → OAuth consent screen.** Choose **Internal** if the
+   project sits inside a Workspace you control — that alone stops anyone
+   outside the organisation from reaching the consent screen. Choose External
+   otherwise.
 3. **Credentials → Create credentials → OAuth client ID → Web application.**
    Add the authorised redirect URI, exactly, including the path:
 
@@ -142,72 +106,55 @@ Fifteen minutes in the Google Cloud Console, and the result is that only
    ```
    GOOGLE_CLIENT_ID=1234567890-xxxxxxxx.apps.googleusercontent.com
    GOOGLE_CLIENT_SECRET=GOCSPX-xxxxxxxxxxxxxxxx
-   GOOGLE_HOSTED_DOMAIN=novikontas.org
-   ALLOWED_EMAIL_DOMAINS=novikontas.org,novikontas.lv
    ```
 
-5. **Restart the API.** The button appears on the login screen by itself.
+5. **Restart the API.**
 
-**How the domain restriction actually works.** `GOOGLE_HOSTED_DOMAIN` is passed
-to Google as the `hd` parameter, which filters the account chooser — but it is a
-hint to the user interface, and a caller can edit it out of the URL. So it is
-never trusted. On the way back, the API verifies the ID token's signature,
-issuer and audience against Google's published keys, then requires all of:
-the address is `email_verified`, the token carries an `hd` claim (personal
-@gmail.com accounts do not), that claim matches the address domain, and the
-domain is in `ALLOWED_EMAIL_DOMAINS`. A personal Gmail account fails at the
-`hd` check, and an allowlisted address attached as an alias to a personal
-account fails at the match.
+**When you're ready to restrict to company accounts**, add your domain(s):
 
-Add a domain to `ALLOWED_EMAIL_DOMAINS` and it works for Google _and_ magic
-links — one list governs both.
+```
+GOOGLE_HOSTED_DOMAIN=yourdomain.com
+ALLOWED_EMAIL_DOMAINS=yourdomain.com
+```
 
-### Demo persona picker
-
-The login screen lists everyone. Click a name — no password.
-
-| Persona                                           | Sees                                                          |
-| ------------------------------------------------- | ------------------------------------------------------------- |
-| **Ilze Ozola** · admin@novikontas.org             | Everything: review queue, decisions, assignment, all settings |
-| **Marek Vaitkus** · quality@novikontas.org        | Second administrator, Lithuanian locale                       |
-| **Juris Kalnins** · nav.instructor@novikontas.org | Staff view, perfect submission record                         |
-| **Agnese Liepina** · finance@novikontas.org       | Staff view with several missed weeks and an exemption         |
-
-23 more staff are listed behind "Show all". The real magic-link form sits below
-the picker and still works — in demo mode the link is printed to the API console
-instead of being emailed.
-
-**A five-minute walkthrough is in [docs/DEMO.md](docs/DEMO.md).**
+`GOOGLE_HOSTED_DOMAIN` is only a cosmetic hint to Google's account chooser — a
+caller can strip it from the URL, so nothing security-relevant depends on it.
+The real gate is `ALLOWED_EMAIL_DOMAINS`, checked server-side against the
+verified `hd` and email claims on the way back from Google.
 
 ---
 
-## What's in the demo data
+## Test data
 
-|               |                                                                                                                        |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| Staff         | 24 across College, Training Centre, Energy and Shared — 3 of them admins                                               |
-| Weeks         | 11 ISO weeks: 10 closed, the current one open                                                                          |
-| Suggestions   | 172 real maritime-training suggestions, spread across every status                                                     |
-| Participation | On-time, in-grace, missed and exempt weeks, so the rank list has genuine spread                                        |
-| Responses     | Every decided suggestion carries a written response; rejections carry reasons                                          |
-| Extras        | Comments, internal admin notes, votes, assignment, due dates, overdue items, ISO 9001 references, reminder-run history |
+The seed (`pnpm db:seed`, or `apps/api/prisma/seed.ts`) creates settings
+defaults, the standard categories, and three test users — one admin and two
+placeholder staff — with **no suggestions, cycles, votes or comments**.
+Replace `TEST_USERS` in that file with the real roster before launch.
 
-Data is generated from a fixed seed, so every deploy looks identical. Re-seed with
-`pnpm demo:reseed` (wipes and rebuilds).
+To wipe an existing database back down to just those three accounts (e.g. old
+demo data from before this rollout):
+
+```bash
+pnpm db:reseed    # deletes all suggestions/cycles/votes/comments/etc. and
+                  # any user not in TEST_USERS, then re-seeds
+```
+
+This is destructive — it deletes every suggestion, cycle, vote, comment and
+non-test user. Only run it against a database you mean to reset.
 
 ---
 
 ## What it does
 
 | Capability         | Detail                                                                                                                                                                    |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Weekly quota       | One per person per ISO week. Enforced in the service layer, the participation ledger, and a partial unique index in Postgres                                              |
 | Friday reminder    | 17:00 to anyone who hasn't logged one, skipping opt-outs and hard bounces                                                                                                 |
 | Monday grace       | 09:00 final call; submitting before noon still fills last week's slot                                                                                                     |
 | Miss ledger        | Monday noon, anything still pending becomes `MISSED`. Admins can mark a week `EXEMPT` for leave or sickness                                                               |
 | Rank list          | Scored on accepted and implemented rather than volume. Visibility is admin-controlled                                                                                     |
 | Full admin control | Review queue, status transitions with mandatory reasons, assignment with due dates, official responses, internal notes, categories, people, and every behavioural setting |
-| Sign-in            | Passwordless magic link restricted to allowlisted org domains — or one-click personas in demo mode                                                                        |
+| Sign-in            | Google OAuth only, domain restriction opt-in                                                                                                                              |
 | Audit trail        | Append-only status history plus an audit log for sensitive admin actions                                                                                                  |
 | Multilingual       | EN, LV, RU written; LT and KA fall back to EN                                                                                                                             |
 
@@ -241,22 +188,47 @@ useful — without that weighting, a weekly quota reliably produces filler logge
 
 ---
 
+## Deploying
+
+`render.yaml` provisions one Render web service. It does **not** provision a
+database — that's Supabase. After the first deploy, paste your Supabase
+`DATABASE_URL`, `DIRECT_URL` and Google OAuth credentials into the service's
+environment variables in the Render dashboard (they're marked `sync: false` in
+the blueprint so Render won't overwrite them).
+
+```bash
+git init && git add -A && git commit -m "Suggestion platform"
+git remote add origin git@github.com:<you>/<repo>.git
+git push -u origin main
+```
+
+Then in Render: **New → Blueprint → select the repo → Apply**, then fill in
+`DATABASE_URL`, `DIRECT_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` (and
+optionally `RESEND_API_KEY`) in the service's environment tab.
+
+Add `https://YOUR-RENDER-URL/api/auth/google/callback` as an authorised
+redirect URI on the Google OAuth client once you know the Render URL.
+
+**One service, not two.** Express serves the built React app, so there is a
+single origin, the session cookie stays first-party, and there is no CORS to
+tune.
+
+---
+
 ## Commands
 
-| Command                               | Does                                                                 |
-| ------------------------------------- | -------------------------------------------------------------------- |
-| `pnpm setup`                          | Everything but the servers: install, database, schema, raw SQL, seed |
-| `pnpm demo`                           | `pnpm setup` followed by `pnpm dev`                                  |
-| `pnpm dev`                            | API and web together, both hot-reloading                             |
-| `pnpm dev:api` / `pnpm dev:web`       | One at a time                                                        |
-| `pnpm demo:seed` / `pnpm demo:reseed` | Seed, or wipe and re-seed                                            |
-| `pnpm db:up` / `pnpm db:down`         | Start / stop the Postgres container                                  |
-| `pnpm db:push`                        | Apply `schema.prisma` directly — no migration files                  |
-| `pnpm db:migrate`                     | Proper migration history, for real deployments                       |
-| `pnpm db:raw`                         | Re-apply `raw.sql`                                                   |
-| `pnpm db:studio`                      | Prisma Studio — a GUI over the data                                  |
-| `pnpm typecheck`                      | All four packages                                                    |
-| `pnpm build`                          | Production build of the frontend                                     |
+| Command                        | Does                                                                 |
+| -------------------------------- | --------------------------------------------------------------------- |
+| `pnpm setup`                    | Everything but the servers: install, schema, raw SQL, seed            |
+| `pnpm dev`                      | API and web together, both hot-reloading                              |
+| `pnpm dev:api` / `pnpm dev:web` | One at a time                                                          |
+| `pnpm db:seed` / `pnpm db:reseed` | Seed, or wipe transactional data and re-seed                         |
+| `pnpm db:push`                  | Apply `schema.prisma` directly — no migration files                   |
+| `pnpm db:migrate`               | Proper migration history, for real deployments                        |
+| `pnpm db:raw`                   | Re-apply `raw.sql`                                                    |
+| `pnpm db:studio`                | Prisma Studio — a GUI over the data                                   |
+| `pnpm typecheck`                | All four packages                                                     |
+| `pnpm build`                    | Production build of the frontend                                      |
 
 `db:push` and `db:raw` are a pair and belong together, in that order: the push
 drops the generated `search_vector` column — Prisma cannot describe a generated
@@ -264,37 +236,34 @@ column, so leaving it in place makes the second push fail — and `raw.sql`
 recreates it with its GIN index. Nothing is lost; every value in it is derived
 from title and body.
 
-`db:push` is used for the demo because it needs no migration files. For a real
-deployment switch to `pnpm db:migrate`, which writes migration history and folds
-`raw.sql` into the migration so the next `migrate dev` doesn't see drift.
+`db:push` needs no migration files, which is why `pnpm setup` and the Render
+release step use it. For a real deployment consider switching to
+`pnpm db:migrate`, which writes migration history and folds `raw.sql` into the
+migration so the next `migrate dev` doesn't see drift.
 
 ---
 
 ## Repository layout
 
 ```
-render.yaml               Render blueprint — database + web service
-.env.demo                 Working demo config; copy to .env
-scripts/
-  wait-for-db.mjs         Polls PostgreSQL until it accepts connections
+render.yaml               Render blueprint — web service only (database is Supabase)
 apps/
   api/                    Express + Prisma
     scripts/
       prisma.mjs          Runs the Prisma CLI with the root .env loaded
     prisma/
-      schema.prisma       Data model — 16 tables
+      schema.prisma       Data model
       raw.sql             tsvector column, quota index, vote trigger
       apply-raw.ts        Applies raw.sql through Prisma (no psql needed)
       append-raw.mjs      Folds raw.sql into a migration, for real deployments
-      seed-demo.ts        The demo dataset
-      seed.ts             Minimal seed for a real rollout
+      seed.ts             Settings, categories, test users — no suggestions
     src/
       lib/time.ts         ISO week maths in Europe/Riga
       services/cycles.ts  Open, grace window, close, miss ledger
       services/ranking.ts Leaderboard aggregation and streaks
       jobs/index.ts       pg-boss schedules
       routes/             auth · google · suggestions · admin · webhooks · misc
-      services/session.ts Session cookie, shared by all three sign-in paths
+      services/session.ts Session cookie
   web/                    React + Vite + Tailwind v4
     src/components/WatchStrip.tsx   The week, drawn
     src/pages/            login · submit · my log · detail · board · ranks · settings
@@ -303,38 +272,39 @@ packages/
   shared/                 Zod schemas, enums, scoring formula — used by both apps
   emails/                 Localised HTML email templates
 docs/
-  DEMO.md                 Five-minute walkthrough
   OPERATIONS.md           Cycle mechanics, email setup, privacy, production notes
-  SPEC.md                 The frozen requirements spec
+  GOING_LIVE.md           Step-by-step checklist: testing setup -> real rollout
+  SPEC.md                 The frozen original requirements spec (historical)
 ```
 
 **Dependencies and prerequisites → [DEPENDENCIES.md](DEPENDENCIES.md)**
 
 ---
 
-## Turning the demo into a real deployment
+## Before a real launch
 
-1. `DEMO_MODE=false` — removes one-click sign-in. **Non-negotiable.** Set up
-   Google sign-in first, so people have a way in that needs no email delivery.
+**Full step-by-step checklist → [docs/GOING_LIVE.md](docs/GOING_LIVE.md).**
+Short version:
+
+1. Set `ALLOWED_EMAIL_DOMAINS` (and `GOOGLE_HOSTED_DOMAIN`) to your
+   organisation's domain(s) — until then, any Google account can sign in.
 2. Verify your sending domain in Resend (SPF, DKIM, DMARC), add
    `RESEND_API_KEY`, set `MAIL_DRY_RUN=false`, and register the webhook at
-   `POST /api/webhooks/resend`. Internal mail to your own domain still gets
-   filtered without domain verification.
-3. Replace `apps/api/prisma/seed-demo.ts` with `seed.ts` and the real HR export,
+   `POST /api/webhooks/resend`.
+3. Replace `TEST_USERS` in `apps/api/prisma/seed.ts` with the real HR export,
    so division and department are right from first sign-in.
 4. Move to migrations: `pnpm db:migrate`, then `db:deploy` on release.
-5. Upgrade off Render's free plans — free Postgres expires after 30 days.
-6. Decide the rank-list visibility. The demo has `showMissesToStaff` **on** so you
-   can see the whole mechanism; the shipped default is **off**.
+5. Decide the rank-list visibility. `showMissesToStaff` defaults **off**.
 
-> Publishing named individual miss counts to all staff is a name-and-shame
-> mechanism. In Latvia and Lithuania it engages employment law and GDPR — you need
-> a documented lawful basis, and works-council consultation may apply. Get HR and
-> legal sign-off before enabling it for real.
+   > Publishing named individual miss counts to all staff is a name-and-shame
+   > mechanism. In Latvia and Lithuania it engages employment law and GDPR — you
+   > need a documented lawful basis, and works-council consultation may apply.
+   > Get HR and legal sign-off before enabling it.
 
-7. Say plainly that anonymity is **pseudonymity**. `submitter_id` is always
-   recorded; identity is stripped on output and any admin reveal writes an audit
-   row. Staff finding this out later does more damage than never offering it.
+6. Say plainly that anonymity is **pseudonymity**. `submitter_id` is always
+   recorded; identity is stripped on output and any admin reveal writes an
+   audit row. Staff finding this out later does more damage than never
+   offering it.
 
 ---
 
@@ -346,3 +316,4 @@ docs/
 | Attachments            | Modelled and multer installed, but the upload route and UI aren't wired — object storage and the MIME allowlist are deployment decisions |
 | LT and KA translations | Fall back to EN                                                                                                                          |
 | ISO 9001 push          | `qms_action_ref` is free text; no automated hand-off                                                                                     |
+| Domain restriction     | Off by default — any Google account can currently sign in. See "Before a real launch" above                                             |

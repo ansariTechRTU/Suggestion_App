@@ -100,14 +100,14 @@ State this plainly in the internal privacy notice. Staff discovering later that
 
 Also settle before rollout: lawful basis (legitimate interest, documented),
 retention (suggestions and history 3 years after closure, then anonymised),
-`auth_tokens` purged 24 h after expiry, and EU-only hosting.
+and EU-only hosting.
 
 ---
 
 ## Production notes
 
 - Set `NODE_ENV=production`, `MAIL_DRY_RUN=false`, real secrets, and a
-  `DATABASE_URL` that is not the Docker default password
+  `DATABASE_URL` pointing at the production Supabase project, not a dev one
 - Serve web and API on the same site so the session cookie stays first-party
 - `secure: true` on the cookie is automatic once `NODE_ENV=production` — the app
   must be behind HTTPS

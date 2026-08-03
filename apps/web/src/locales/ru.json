@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "Suggestions",
-    "org": "Novikontas"
+    "org": "Novikontas Academy"
   },
   "nav": {
     "new": "Новое предложение",
@@ -15,21 +15,13 @@
   },
   "login": {
     "heading": "Вход",
-    "lead": "Введите рабочий адрес Novikontas. Мы отправим ссылку — пароль не нужен.",
-    "email": "Рабочий e-mail",
-    "submit": "Отправить ссылку",
-    "sentHeading": "Проверьте почту",
-    "sentLead": "Если адрес распознан, ссылка уже в пути. Она работает один раз и действует 15 минут.",
-    "again": "Отправить снова",
+    "lead": "Войдите через свой аккаунт Google.",
     "errors": {
-      "expired": "That link has expired or was already used. Request a new one.",
-      "domain": "Only Novikontas email addresses can sign in.",
-      "inactive": "That account is not active. Contact the quality team.",
-      "missing": "That link was incomplete. Request a new one.",
+      "domain": "Войти можно только с аккаунтом разрешённого домена.",
+      "inactive": "Этот аккаунт не активен. Свяжитесь с отделом качества.",
       "state": "Попытка входа истекла или выполнена в другом браузере. Попробуйте снова.",
-      "google_failed": "Вход через Google не завершён. Попробуйте снова или используйте ссылку.",
-      "google_cancelled": "Вход через Google отменён.",
-      "google_disabled": "Вход через Google в этой среде не включён."
+      "google_failed": "Вход через Google не завершён. Попробуйте снова.",
+      "google_cancelled": "Вход через Google отменён."
     }
   },
   "watch": {

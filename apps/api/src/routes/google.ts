@@ -1,22 +1,19 @@
 /**
- * Google Workspace sign-in.
+ * Google sign-in — the only way into the app.
  *
  * The authorisation-code flow, not the implicit one: the browser only ever
  * carries a one-time code, and the code is exchanged for tokens server-to-server
  * with the client secret, which never leaves this process.
  *
- * The domain rule is enforced here, on the server, three times over:
+ * Domain restriction is opt-in via ALLOWED_EMAIL_DOMAINS:
  *
- *   1. `hd` is sent to Google so the account chooser offers work accounts first.
- *      This is a *hint* to the user interface and nothing more — a determined
- *      caller can strip it from the URL, so nothing is allowed to depend on it.
- *   2. The returned ID token's signature, issuer and audience are verified
- *      against Google's published keys.
- *   3. The verified `email_verified`, `hd` and email domain claims are checked
- *      against ALLOWED_EMAIL_DOMAINS before any session is created.
- *
- * Check 3 is the one that actually matters. Personal @gmail.com accounts fail it
- * because they carry no `hd` claim and gmail.com is not an allowlisted domain.
+ *   - Empty (the current default): any Google account that Google itself
+ *     considers verified can sign in. This is deliberate for now — the
+ *     organisation's own domain isn't being enforced yet.
+ *   - Set to one or more domains: only Workspace accounts on those domains are
+ *     accepted, checked against the verified `hd` and email claims, not the
+ *     `hd` hint sent to the account chooser (which a caller can strip from the
+ *     URL, so nothing security-relevant depends on it).
  */
 import { Router } from 'express';
 import crypto from 'node:crypto';
@@ -47,8 +44,6 @@ const fail = (res: import('express').Response, reason: string) =>
 
 /** Start the flow. */
 googleRouter.get('/', rateLimit({ windowMs: 60_000, limit: 20 }), (req, res) => {
-  if (!env.googleEnabled) return fail(res, 'google_disabled');
-
   /**
    * CSRF: a random value goes to Google in the URL and into a cookie the
    * attacker cannot write. The callback only proceeds if the two match, so a
@@ -79,8 +74,6 @@ googleRouter.get('/', rateLimit({ windowMs: 60_000, limit: 20 }), (req, res) => 
 /** Google sends the browser back here with a one-time code. */
 googleRouter.get('/callback', async (req, res, next) => {
   try {
-    if (!env.googleEnabled) return fail(res, 'google_disabled');
-
     const expected = req.cookies?.[STATE_COOKIE];
     const given = String(req.query.state ?? '');
     res.clearCookie(STATE_COOKIE, { path: '/api/auth/google' });
@@ -121,18 +114,22 @@ googleRouter.get('/callback', async (req, res, next) => {
     }
 
     /**
-     * The real gate. `hd` is only present on Workspace accounts, so requiring it
-     * to match the address domain rules out a personal account that happens to
-     * have an allowlisted address attached as an alias.
+     * Domain gate — only enforced once ALLOWED_EMAIL_DOMAINS is configured.
+     * `hd` is only present on Workspace accounts, so requiring it to match the
+     * address domain rules out a personal account that happens to have an
+     * allowlisted address attached as an alias. While the list is empty, any
+     * verified Google account (personal Gmail included) is accepted.
      */
-    const hd = (payload.hd ?? '').toLowerCase();
-    if (!env.allowedDomains.includes(domain) || (hd && hd !== domain)) {
-      logger.info({ domain, hd }, 'rejected google sign-in for non-org domain');
-      return fail(res, 'domain');
-    }
-    if (!hd) {
-      logger.info({ domain }, 'rejected google sign-in: not a workspace account');
-      return fail(res, 'domain');
+    if (env.allowedDomains.length > 0) {
+      const hd = (payload.hd ?? '').toLowerCase();
+      if (!env.allowedDomains.includes(domain) || (hd && hd !== domain)) {
+        logger.info({ domain, hd }, 'rejected google sign-in for non-org domain');
+        return fail(res, 'domain');
+      }
+      if (!hd) {
+        logger.info({ domain }, 'rejected google sign-in: not a workspace account');
+        return fail(res, 'domain');
+      }
     }
 
     /**
