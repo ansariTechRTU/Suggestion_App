@@ -8,3 +8,4 @@ build/
 apps/api/uploads/
 apps/web/dist/
 .turbo/
+*.tsbuildinfo
